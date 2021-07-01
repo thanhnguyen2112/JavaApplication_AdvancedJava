@@ -1,10 +1,12 @@
 package Streams;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class StreamDemo {
@@ -127,9 +129,162 @@ public class StreamDemo {
 				.forEach(list -> System.out.println(list.getTitle()));
 		
 		// takeWhile()
+		movies.stream()
+				.takeWhile(list -> list.getLikes() < 30)
+				.forEach(list -> System.out.println(list.getTitle())); // <30 break
 		
 		// dropWhile()
+		movies.stream()
+				.dropWhile(list -> list.getLikes() < 30)
+				.forEach(list -> System.out.println(list.getTitle())); // skip <30 ->
+	}
+	
+	public static void shower() {
+		var moviess = List.of(
+				new Movie("b", 10),
+				new Movie("a", 20),
+				new Movie("c", 30),
+				new Movie("b2", 10)
+		);
 		
+		
+		// sort
+//		moviess.stream()
+//				.sorted()
+//				.forEach(list -> System.out.println(list.getTitle()));
+		
+//		moviess.stream()
+//				.sorted((a, b) -> a.getTitle().compareTo(b.getTitle()))
+//				.forEach(list -> System.out.println(list.getTitle()));
+//		
+//		//
+//		moviess.stream()
+//				.sorted(Comparator.comparing(Movie::getTitle).reversed())
+//				.forEach(list -> System.out.println(list.getTitle())); // cba
+//		
+//		// all
+//		moviess.stream()
+//				.map(Movie::getLikes)
+//				.forEach(System.out::println);
+//		
+//		// distinct()
+//		moviess.stream()
+//				.map(Movie::getLikes)
+//				.distinct()
+//				.forEach(System.out::println); // unique
+//		
+//		// 
+//		moviess.stream()
+//				.filter(list -> list.getLikes() > 10)
+//				.map(Movie::getTitle)
+//				.forEach(System.out::println);
+//		
+//		//
+//		moviess.stream()
+//				.filter(list -> list.getLikes() > 10)
+//				.peek(list -> System.out.println("Filtered: " + list.getTitle()))
+//				.map(Movie::getTitle)
+//				.peek(list -> System.out.println("Maped: " + list))
+//				.forEach(System.out::println);
+//		
+//		// count 
+//		var count = moviess.stream()
+//				.count();
+//		System.out.println(count);
+//		
+//		// anyMath
+//		boolean result = moviess.stream()
+//				.anyMatch(list -> list.getLikes() > 20);
+//		System.out.println(result);
+//		
+//		// allMath
+//		result = moviess.stream()
+//				.allMatch(list -> list.getLikes() > 20);
+//		System.out.println(result);
+//		
+//		// noneMath
+//		result = moviess.stream()
+//				.noneMatch(list -> list.getLikes() > 20);
+//		System.out.println(result);
+//		
+//		//
+//		var result2 = moviess.stream()
+//				.findFirst()
+//				.get();
+//		System.out.println(result2);
+//		
+//		//
+//		System.out.println(moviess.stream()
+//				.findAny()
+//				.get());
+//		
+//		// max, min
+//		System.out.println(moviess.stream()
+//				.max(Comparator.comparing(Movie::getLikes))
+//				.get());
+//		
+//		// 10 20 30 10
+//		// 30 30 10
+//		// 60 10
+//		// 70
+//		Optional<Integer> sum = moviess.stream()
+//				.map(list -> list.getLikes())
+////				.reduce((a, b) -> a + b);
+////				.reduce((a,  b) -> Integer.sum(a, b));
+//				.reduce(Integer::sum);
+//		
+//		System.out.println(sum.orElse(0));
+//		
+//		//
+//		Integer sumSum = moviess.stream()
+//				.map(list -> list.getLikes())
+//				.reduce(0, Integer::sum);
+//		System.out.println(sumSum);
+		
+		//
+		List<Movie> list = moviess.stream()
+				.filter(m -> m.getLikes() > 10)
+				.collect(Collectors.toList());
+		
+		//
+		Set<Movie> set = moviess.stream()
+				.filter(m -> m.getLikes() > 10)
+				.collect(Collectors.toSet());
+		
+		// map
+		// key title
+		// value likes
+		Map<String, Integer> map = moviess.stream()
+				.filter(m -> m.getLikes() > 10)
+				.collect(Collectors.toMap(Movie::getTitle, Movie::getLikes));
+		
+		System.out.println(map);
+		
+		//
+		Map<String, Movie> map2 = moviess.stream()
+				.filter(m -> m.getLikes() > 10)
+				.collect(Collectors.toMap(Movie::getTitle, Function.identity())); // m -> m
+		
+		System.out.println(map2);
+		
+		//
+		var result1 = moviess.stream()
+				.filter(m -> m.getLikes() > 10)
+				.collect(Collectors.summingInt(Movie::getLikes));
+		System.out.println(result1);
+		
+		//
+		var result2 = moviess.stream()
+				.filter(m -> m.getLikes() > 10)
+				.collect(Collectors.summarizingInt(Movie::getLikes));
+		System.out.println(result2);
+		
+		//
+		var result3 = moviess.stream()
+				.filter(m -> m.getLikes() > 10)
+				.map(Movie::getTitle)
+				.collect(Collectors.joining(" , "));
+		System.out.println(result3);
 	}
 }
 

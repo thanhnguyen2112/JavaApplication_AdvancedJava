@@ -1,5 +1,9 @@
 package LambdasAndFunctionalInterface;
 
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
+import java.util.function.IntBinaryOperator;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.function.UnaryOperator;
 
@@ -90,11 +94,76 @@ public class LambdaDemo {
 //		var random = getRandom.get();
 //		System.out.println(random);
 		
-//		UnaryOperator<Integer> square = n -> n * n;
-//		UnaryOperator<Integer> increment = n -> n + 1;
-//		
-//		var result = increment.andThen(square).apply(1);
-//		System.out.println(result);
+
+		// Function
+		
+		
+		Function<String, Integer> map = str -> str.length();
+		
+		var length = map.apply("Testing");
+		System.out.println(length);
+		
+		
+		
+		// "key:value"
+		// "key=value" 1st
+		// "{key=value}" 2nd
+		
+		Function<String, String> replaceColon = str -> str.replace(":", "=");
+		Function<String, String> addBraces = str -> "{" + str + "}";
+		
+		var result = replaceColon.andThen(addBraces).apply("key:value");
+		System.out.println(result);
+		
+		//2nd
+		result = addBraces.compose(replaceColon).apply("key2:value2");
+		System.out.println(result);
+		
+		//Predicate
+		
+		Predicate<String> isLongerThan5 = str -> str.length() > 5;
+		
+		var resultPre = isLongerThan5.test("Test");
+		System.out.println(resultPre); // ->false
+		
+		Predicate<String> hasLeftBrace = str -> str.startsWith("{");
+		Predicate<String> hasRightBrace = str -> str.endsWith("}");
+		
+		// and() &&
+		Predicate<String> has1 = hasLeftBrace.and(hasRightBrace);
+		var result1 = has1.test("{key:value}"); //{}
+		System.out.println(result1);
+		
+		// or() ||
+		Predicate<String> has2 = hasLeftBrace.or(hasRightBrace);
+		var result2 = has2.test("{key:value}"); // { or }
+		System.out.println(result2);
+		
+		// negate() !
+		Predicate<String> has3 = hasLeftBrace.negate();
+		var result3 = has3.test("{key:value}"); // not
+		System.out.println(result3);
+		
+		// BinaryOperator
+		BinaryOperator<Integer> add = (a, b) -> a + b;
+		var result4 = add.apply(3, 5);
+		System.out.println(result4);
+		
+		// IntBinaryOperator
+		IntBinaryOperator add2 = (a, b) -> a * b;
+		System.out.println(add2.applyAsInt(5, 9));
+		
+		//
+		Function<Integer, Integer> square = a -> a * a;
+		System.out.println(add.andThen(square).apply(2, 3)); //(2+3)^2
+		
+		
+		
+		UnaryOperator<Integer> squaree = n -> n * n; // 2^2=4
+		UnaryOperator<Integer> increment = n -> n + 1; //1+1=2
+		
+		var result5 = increment.andThen(squaree).apply(1);
+		System.out.println(result5); // ->4
 		
 	}
 
