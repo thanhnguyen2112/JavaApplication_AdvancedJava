@@ -8,6 +8,7 @@ import java.util.stream.Collectors;
 
 public class StreamDemo {
 	public static void showsh() {
+		
 		var movies = List.of(
 				new Movie("a", 10, Genre.THRILLER),
 				new Movie("b", 20, Genre.ACTION),
